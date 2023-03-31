@@ -14,5 +14,5 @@ Requires Python 3.8+.
 2. Follow the following instructions to [Generate an API Key for Botometer](https://rapidapi.com/OSoMe/api/botometer-pro/details)
 3. Follow the following instructions to [Generate an API Key for Twitter](https://developer.twitter.com/en/docs/twitter-api/getting-started/getting-access-to-the-twitter-api)
 4. Modify `app.py` file with your API Key information
-> **Note:** You will see the `# Authenticate with Twitter API and Botometer` comment and you fill out everything that says `**KEY HERE**`...
+> **Note:** You will see the `# Authenticate with Twitter API and Botometer` comment and you fill out everything that says `**KEY HERE**`
 - From inside of the root folder: `streamlit run app.py`
