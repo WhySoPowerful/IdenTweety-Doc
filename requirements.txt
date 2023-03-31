@@ -1,0 +1,4 @@
+botometer==1.6.1
+pandas==1.5.2
+streamlit==1.16.0
+tweepy==3.10.0
