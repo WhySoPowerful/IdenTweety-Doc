@@ -154,13 +154,36 @@ with input_section:
             col1.markdown(f"<h4 style='text-align: center; color: var(--main-text-color);'>Followers: <span style='color: #00FF00;'>{followers_count}</span></h4>", unsafe_allow_html=True)
             col3.markdown(f"<h4 style='text-align: center; color: var(--main-text-color);'>Following: <span style='color: #00FF00;'>{friends_count}</span></h4>", unsafe_allow_html=True)
 
+            # A work in progress
+            # You can adjust the weights based on the importance of each category in your specific use case.
+            # In this example, we assign weights to each category (content, friend, network, sentiment, and temporal) and calculate the overall bot score using the weighted average.
+
+            # weights = {
+            #     "content": 0.25,
+            #     "friend": 0.25,
+            #     "network": 0.25,
+            #     "sentiment": 0.15,
+            #     "temporal": 0.1
+            # }
+
+            # for screen_name, result in bom.check_accounts_in(follower_screen_names):
+            #     try:
+            #         scores = result['raw_scores']['english']
+            #         rescaled_scores = {key: round(value * 5, 2) for key, value in scores.items()}  # Rescale raw scores to range 0 to 5
+            #         weighted_scores = {key: rescaled_scores[key] * weights[key] for key in rescaled_scores}
+            #         overall_bot_score = round(sum(weighted_scores.values()), 2)
+            #         follower_screen_names_bot_scores[screen_name] = {"overall": overall_bot_score, "detailed_scores": rescaled_scores}
+            #     except Exception:
+            #         follower_screen_names_bot_scores[screen_name] = 'NaN'
+
             follower_screen_names = [f'@{follower.screen_name}' for follower in tweepy.Cursor(api.followers, user_input).items(20)]
             follower_screen_names_bot_scores = {}
             for screen_name, result in bom.check_accounts_in(follower_screen_names):
                 try:
-                    scores = list(result['raw_scores']['english'].values())
-                    bot_score = round(sum(scores) / len(scores), 2)
-                    follower_screen_names_bot_scores[screen_name] = bot_score
+                    scores = result['raw_scores']['english']
+                    rescaled_scores = {key: round(value * 5, 2) for key, value in scores.items()}  # Rescale raw scores to range 0 to 5
+                    overall_bot_score = round(sum(rescaled_scores.values()) / len(rescaled_scores), 2)
+                    follower_screen_names_bot_scores[screen_name] = {"overall": overall_bot_score, "detailed_scores": rescaled_scores}
                 except Exception:
                     follower_screen_names_bot_scores[screen_name] = 'NaN'
 
@@ -171,7 +194,10 @@ with input_section:
             col1.markdown("<h3 style='text-align: center; color: var(--main-text-color);'>User Scores</h3>",unsafe_allow_html=True)
             col1.write(result)
             col2.markdown("<h3 style='text-align: center; color: var(--main-text-color);'>Follower Scores</h3>",unsafe_allow_html=True)
-            col2.write(follower_screen_names_bot_scores)
+            col2.write({key: value["overall"] if value != 'NaN' else value for key, value in follower_screen_names_bot_scores.items()})
+
+            st.markdown("<h3 style='text-align: center; color: var(--main-text-color);'>Detailed Follower Scores</h3>", unsafe_allow_html=True)
+            st.write({key: value["detailed_scores"] if value != 'NaN' else value for key, value in follower_screen_names_bot_scores.items()})
 
         except tweepy.TweepError:
             st.error("Failed to fetch user data. Please check if the handle is valid.")
