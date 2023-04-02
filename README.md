@@ -6,7 +6,6 @@ To set up and use the app, follow the instructions in the README.md file, which 
 Requires Python 3.8+.
 ## Dependencies
 - botometer
-- pandas
 - streamlit
 - tweepy
 ## Setup
